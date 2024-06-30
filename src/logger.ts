@@ -146,7 +146,7 @@ class Logger implements ILogger {
                     handleExceptions: true,
                 }),
             ],
-            defaultMeta: { serviceName: process.env.SERVICE_NAME ?? 'Service-HTTP' },
+            defaultMeta: { service: process.env.SERVICE_NAME ?? 'Service-HTTP' },
         })
     }
 

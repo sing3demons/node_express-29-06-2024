@@ -143,7 +143,7 @@ class TypedRouteHandler<
         }
 
 
-        console.log(TypedRouteHandler.name, this.method.toUpperCase(), this.path)
+        // console.log(TypedRouteHandler.name, this.method.toUpperCase(), this.path)
         return {
             method: this.method,
             path: this.path,

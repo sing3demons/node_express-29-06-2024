@@ -3,6 +3,7 @@ import type { Express, Request, Response, NextFunction, RequestHandler } from 'e
 import http from 'http'
 import { v7 as uuid } from 'uuid'
 import { globalErrorHandler, MyRouter } from './my-router'
+import logMiddleware from './middleware'
 
 interface IServer {
     start: () => IServer
@@ -23,6 +24,7 @@ class Server implements IServer {
         this.app.use(express.json({ limit: '50mb' }))
         this.app.use(express.urlencoded({ extended: true }))
         this.app.get('/healthz', (_req: Request, res: Response) => { res.status(200).send('OK') })
+        this.app.use(logMiddleware)
     }
     public start = (cb?: () => Promise<void> | void) => {
         cb?.()
