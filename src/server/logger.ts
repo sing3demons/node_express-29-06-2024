@@ -108,7 +108,7 @@ export const logMiddleware = (req: Request, res: Response, next: NextFunction) =
         let logInfo = {
             timestamp: new Date().toISOString(),
             level: 'info',
-            message: 'Request completed successfully',
+            message: res.statusCode === 200 ? 'Request Success' : 'Request Failed',
             session: {
                 id: session,
                 ip: req.ip,
@@ -117,7 +117,7 @@ export const logMiddleware = (req: Request, res: Response, next: NextFunction) =
             },
             service: {
                 name: 'Service-HTTP',
-                version: '1.2.0',
+                version: '1.0.0',
                 host: req.hostname
             },
             request: {

@@ -65,6 +65,9 @@ class Server implements IServer {
     }
 
     public listen = (port: number | string) => {
+        this.app.use((req: Request, res: Response, _next: NextFunction) => {
+            res.status(404).json({ message: 'Unknown URL', path: req.originalUrl })
+        })
         this.app.use(globalErrorHandler)
         const server = http.createServer(this.app).listen(port, () => {
             console.log(`Server is running on port: ${port}`)
