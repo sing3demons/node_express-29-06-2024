@@ -3,17 +3,17 @@ import type { Express, Request, Response, NextFunction, RequestHandler } from 'e
 import http from 'http'
 import { v7 as uuid } from 'uuid'
 import { globalErrorHandler, MyRouter } from './my-router'
-import logMiddleware from './middleware'
+import { logMiddleware } from './logger'
 
 interface IServer {
-    start: () => IServer
+    // start: () => IServer
     use: (handler: RequestHandler) => IServer
     listen: (port: number) => void
 }
 
 class Server implements IServer {
     private readonly app: Express
-    constructor() {
+    constructor(cb?: () => Promise<void> | void) {
         this.app = express()
         this.app.use((req: Request, _res: Response, next: NextFunction) => {
             if (!req.headers['x-transaction-id']) {
@@ -25,10 +25,8 @@ class Server implements IServer {
         this.app.use(express.urlencoded({ extended: true }))
         this.app.get('/healthz', (_req: Request, res: Response) => { res.status(200).send('OK') })
         this.app.use(logMiddleware)
-    }
-    public start = (cb?: () => Promise<void> | void) => {
         cb?.()
-        return this
+        // return this
     }
     // app.use(new MyRouter().Register(new ExampleController(myRoute)).instance)
     public route = (path: string, classInstance: object) => {

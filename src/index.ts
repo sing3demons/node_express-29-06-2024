@@ -1,8 +1,8 @@
-import Logger, { LoggerType } from './logger'
-import { IRoute, TypeRoute, t } from './my-router'
-import Server from './server'
+import Logger, { LoggerType } from './server/logger'
+import { IRoute, TypeRoute, t } from './server/my-router'
+import Server from './server/server'
 
-const app = new Server().start()
+const app = new Server()
 
 const PORT = process.env.PORT ?? 3000
 const myRoute: IRoute = new TypeRoute()
