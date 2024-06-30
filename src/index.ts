@@ -1,36 +1,24 @@
+import AuthHandler from './auth/handler'
+import AuthRepository from './auth/repository'
+import AuthService from './auth/service'
+import Database from './db'
 import Logger, { LoggerType } from './server/logger'
 import { IRoute, TypeRoute, t } from './server/my-router'
 import Server from './server/server'
+import  config from './config'
+const { MONGO_URL } = config
 
-const app = new Server()
+const db = new Database(MONGO_URL)
+const app = new Server(async () => {
+    await db.connect()
+})
 
 const PORT = process.env.PORT ?? 3000
 const myRoute: IRoute = new TypeRoute()
 const logger = new Logger()
+const authRepository = new AuthRepository(db)
+const authService = new AuthService(authRepository)
 
-class Handler {
-    constructor(private readonly route: IRoute, private readonly logger: LoggerType) { }
-
-    private get = this.route.get('/').query(t.object({
-        id: t.string().optional(),
-    })).handler(async ({ query, req }) => {
-        const logger = this.logger.Logger(req)
-        logger.info('Request', query)
-        return {
-            message: 'Hello World',
-            data: {
-                id: query.id,
-            },
-        }
-    })
-
-    private post = this.route.post('/').handler(async () => {
-        return {
-            message: 'Hello World',
-        }
-    })
-}
-
-app.route('/api', new Handler(myRoute, logger))
+app.route('/api/v1/auth', new AuthHandler(myRoute, logger, authService))
 
 app.listen(PORT)
